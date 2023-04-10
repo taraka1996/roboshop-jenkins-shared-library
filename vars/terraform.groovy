@@ -8,7 +8,7 @@ def call() {
     }
 
     options {
-      authorizationMatrix('xterm')
+      ansiColor('xterm')
     }
 
     stages {
