@@ -6,7 +6,6 @@ def call() {
     agent any
 
     stages {
-
       stage('Compile/Build') {
         steps {
           script {
@@ -31,9 +30,11 @@ def call() {
         }
       }
     }
-     post {
+
+    post {
       failure {
         mail bcc:mail body: "<h1>${component} - Pipeline Failed \n ${BUILD_URL}</h1>", from: 'nani.adamgilchrist@gmail.com', subject: "${component} - Pipeline Failed", to: 'nani.adamgilchrist@gmail.com',  mimeType: 'text/html'
-    }
       }
     }
+  }
+}
