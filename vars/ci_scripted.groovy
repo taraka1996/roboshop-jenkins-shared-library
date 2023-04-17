@@ -4,12 +4,10 @@ def call() {
     }
     node('workstation') {
         try {
-            stage('check out code') {     
-                sh 'ls  -l'           
-                cleanWs()
-                sh 'ls -l'                
+            stage('check out code') {                      
+                cleanWs()                                
                 git branch: 'main', url: 'http://github.com/taraka1996/cart'
-                sh 'ls -l'                
+                             
             } 
 
             sh 'env' 
