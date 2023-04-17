@@ -16,8 +16,9 @@ def call() {
                 stage('compile/build') {            
                     common.compile()
                 }        
-            }        
+            }       
 
+            if(env.TAG_NAME=) {
             stage('Test Cases') {
                 common.testcases()
             }
