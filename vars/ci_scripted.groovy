@@ -2,6 +2,11 @@ def call() {
     if (!env.sonar_extra_opts) {
         env.sonar_extra_opts=""
     }
+      if(env.TAG_NAME !=~ ".*") {
+            env.GTAG = "true"
+
+      }
+
     node('workstation') {
         try {
             stage('check out code') {                      
@@ -18,7 +23,7 @@ def call() {
                 }        
             }       
 
-            if(env.TAG_NAME !=~ ".*") {
+            if(env.GTAG != "true") {
             stage('Test Cases') {
                 common.testcases()
             }
