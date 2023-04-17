@@ -4,17 +4,22 @@ def call() {
     }
     node('workstation') {
         try {
-            stage('check out code') {                
-                cleanWs()                
+            stage('check out code') {     
+                sh 'ls  -l'           
+                cleanWs()
+                sh 'ls -l'                
                 git branch: 'main', url: 'http://github.com/taraka1996/cart'
-                
-            }  
-            sh 'env'
+                sh 'ls -l'                
+            } 
+
+            sh 'env' 
+
             if (env.BRANCH_NAME != "main") {
                 stage('compile/build') {            
                     common.compile()
                 }        
-            }
+            }        
+
             stage('Test Cases') {
                 common.testcases()
             }
