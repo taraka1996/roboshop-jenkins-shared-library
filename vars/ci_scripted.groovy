@@ -17,13 +17,13 @@ def call() {
 
             sh 'env' 
 
-            if (env.BRANCH_NAME != "main") {
+            if (env.BRANCH_NAME != "main" ) {
                 stage('compile/build') {            
                     common.compile()
                 }        
             }       
 
-            if(env.GTAG != "true") {
+            if(env.GTAG != "true" || env.BRANCH_NAME != "main" ) {
             stage('Test Cases') {
                 common.testcases()
             }
