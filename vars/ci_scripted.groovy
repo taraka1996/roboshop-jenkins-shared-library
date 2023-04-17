@@ -7,7 +7,7 @@ def call() {
 
       } else {
         env.GTAG = 'false'
-      }  
+        
 
     node('workstation') {
         try {
@@ -23,9 +23,12 @@ def call() {
                 stage('compile/build') {            
                     common.compile()
                 }        
-            }       
+            } 
 
-            if(env.GTAG != "true" || env.BRANCH_NAME != "main" ) {
+            println GTAG
+            println BRANCH_NAME      
+
+            if(env.GTAG != "true" && env.BRANCH_NAME != "main" ) {
             stage('Test Cases') {
                 common.testcases()
             }
