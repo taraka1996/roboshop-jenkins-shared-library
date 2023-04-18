@@ -31,11 +31,24 @@ def call() {
             if(env.GTAG != "true" && env.BRANCH_NAME != "main" ) {
             stage('Test Cases') {
                 common.testcases()
+              }
             }
-            stage('code quality') {
+
+            if (BRANCH_NAME ==~ "PR-.*") {              
+             stage('code quality') {
                 common.codequality()
             }
-        } catch (e) {
+            
+            if(env.GTAG != "true"  ) {
+            stage('package') {
+                common.testcases()
+              }
+            stage('Artifact upload') {
+                common.testcases()
+            }
+            }
+
+            } catch (e) {
             mail body: "<h1>${component} - Pipeline Failed \n ${BUILD_URL}</h1>", from: 'tarakaramtirumala@gmail.com', subject: "${component}- Pipeline Failed", to: 'tarakaramtirumala@gmail.com',  mimeType: 'text/html'
         }
     }
