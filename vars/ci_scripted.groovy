@@ -2,12 +2,11 @@ def call() {
     if (!env.sonar_extra_opts) {
         env.sonar_extra_opts=""
     }
-      if(env.TAG_NAME !=~ ".*") {
-            env.GTAG = "true"
-
-      } else {
+    if(env.TAG_NAME !=~ ".*") {
+        env.GTAG = "true"
+    } else {
         env.GTAG = 'false'
-        
+    }
 
     node('workstation') {
         try {
@@ -29,26 +28,26 @@ def call() {
             println BRANCH_NAME      
 
             if(env.GTAG != "true" && env.BRANCH_NAME != "main" ) {
-            stage('Test Cases') {
-                common.testcases()
-              }
+                stage('Test Cases') {
+                    common.testcases()
+                }
             }
 
             if (BRANCH_NAME ==~ "PR-.*") {              
-             stage('code quality') {
-                common.codequality()
+                stage('code quality') {
+                    common.codequality()
+                }
+                
+                if(env.GTAG != "true"  ) {
+                    stage('package') {
+                        common.testcases()
+                    }
+                    stage('Artifact upload') {
+                        common.testcases()
+                    }
+                }
             }
-            
-            if(env.GTAG != "true"  ) {
-            stage('package') {
-                common.testcases()
-              }
-            stage('Artifact upload') {
-                common.testcases()
-            }
-            }
-
-            } catch (e) {
+        } catch (e) {
             mail body: "<h1>${component} - Pipeline Failed \n ${BUILD_URL}</h1>", from: 'tarakaramtirumala@gmail.com', subject: "${component}- Pipeline Failed", to: 'tarakaramtirumala@gmail.com',  mimeType: 'text/html'
         }
     }
