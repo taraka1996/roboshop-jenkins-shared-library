@@ -1,42 +1,58 @@
+def call() {
+  if (!env.sonar_extra_opts) {
+    env.sonar_extra_opts=""
+  }
 
-def call () {
-    if (!env.sonar_extra_opts) {
-        env.sonar_extra_opts=""
-    }
-    pipeline {
-        agent any
+  if(env.TAG_NAME ==~ ".*") {
+    env.GTAG = "true"
+  } else {
+    env.GTAG = "false"
+  }
+  node('workstation') {
 
-        stages {
+    try {
 
-            stage('Compile/Build') {
-                steps {
-                    script {
-                        common.compile()
-                    }
-                }
-            }
+      stage('Check Out Code') {
+        cleanWs()
+        git branch: 'main', url: "https://github.com/raghudevopsb71/${component}"
+      }
 
-            stage('Test Cases') {
-                steps {
-                    script {
-                        common.testcases()
-                    }
-                }
-            }
-            stage('Code Quality') {
-                steps {
-                    script {
-                        common.codequality()
-                    }
-                }
-            }
+      sh 'env'
+
+      if (env.BRANCH_NAME != "main") {
+        stage('Compile/Build') {
+          common.compile()
         }
-        post {
-            failure {
-                mail body: "${component} - Pipeline Failed \n ${BUILD_URL}", from: 'nani.adamgilchrist@gmail.com', subject: "${component} - Pipeline Failed", to: 'nani.adamgiclhrist@gmail.com', mimeType: 'text/html'
+      }
 
-            }
+      println GTAG
+      println BRANCH_NAME
+
+      if(env.GTAG != "true" && env.BRANCH_NAME != "main") {
+        stage('Test Cases') {
+          common.testcases()
         }
+      }
+
+      if (BRANCH_NAME ==~ "PR-.*"){
+        stage('Code Quality') {
+          common.codequality()
+        }
+      }
+
+      if(env.GTAG == "true") {
+        stage('Package') {
+          common.prepareArtifacts()
+        }
+        stage('Artifact Upload') {
+          common.artifactUpload()
+        }
+      }
+
+
+    } catch (e) {
+      mail body: "<h1>${component} - Pipeline Failed \n ${BUILD_URL}</h1>", from: 'nani.admgilchrist@gmail.com', subject: "${component} - Pipeline Failed", to: 'nani.admgilchrist@gmail.com',  mimeType: 'text/html'
     }
 
+  }
 }
