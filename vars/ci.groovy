@@ -51,7 +51,7 @@ def call() {
 
 
     } catch (e) {
-      mail body: "<h1>${component} - Pipeline Failed \n ${BUILD_URL}</h1>", from: 'nani.admgilchrist@gmail.com', subject: "${component} - Pipeline Failed", to: 'nani.admgilchrist@gmail.com',  mimeType: 'text/html'
+      mail body: "<h1>${component} - Pipeline Failed \n ${BUILD_URL}</h1>", from: 'nani.admgilchrist@gmail.com', subject: "${component} - Pipeline Failed", to: 'nani.adamgilchrist@gmail.com',  mimeType: 'text/html'
     }
 
   }
