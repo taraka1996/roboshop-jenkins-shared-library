@@ -15,14 +15,13 @@ def call() {
 
             stage('Init') {
                 steps {
-                    sh 'terraform init -reconfigure -migrate-state=env-${ENV}/state.tfvars'
+                    sh "terraform init -reconfigure -migrate-state=env-${ENV}/state.tfvars"
                 }
             }
 
             stage('Apply') {
                 steps {
-                    sh 'terraform ${ACTION} -auto-approve -var-file=env-${ENV}/main.tfvars'
-                    // sh 'echo'
+                    sh "terraform ${ACTION} -auto-approve -var-file=env-${ENV}/main.tfvars"
                 }
             }
 
