@@ -15,7 +15,7 @@ def call() {
 
             stage('Init') {
                 steps {
-                    sh 'terraform init -migrate-state=env-${ENV}/state.tfvars'
+                    sh 'terraform init -reconfigure -migrate-state=env-${ENV}/state.tfvars'
                 }
             }
 
